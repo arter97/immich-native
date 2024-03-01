@@ -1,0 +1,24 @@
+# You can find documentation for all the supported env variables at https://immich.app/docs/install/environment-variables
+
+# Connection secret for postgres. You should change it to a random password
+DB_PASSWORD=YOUR_STRONG_RANDOM_PW
+
+# The values below this line do not need to be changed
+###################################################################################
+NODE_ENV=production
+
+DB_USERNAME=immich
+DB_DATABASE_NAME=immich
+DB_VECTOR_EXTENSION=pgvector
+
+# The location where your uploaded files are stored
+UPLOAD_LOCATION=./library
+
+# The Immich version to use. You can pin this to a specific version like "v1.71.0"
+IMMICH_VERSION=release
+
+# Hosts & ports
+DB_HOSTNAME=127.0.0.1
+MACHINE_LEARNING_HOST=127.0.0.1
+IMMICH_MACHINE_LEARNING_URL=http://127.0.0.1:3003
+REDIS_HOSTNAME=127.0.0.1

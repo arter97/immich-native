@@ -1,0 +1,24 @@
+[Unit]
+Description=immich server
+Documentation=https://github.com/immich-app/immich
+Requires=redis-server.service
+Requires=postgresql.service
+Requires=immich-machine-learning.service
+Requires=immich.service
+
+[Service]
+User=immich
+Group=immich
+Type=simple
+Restart=on-failure
+
+WorkingDirectory=/var/lib/immich/app
+EnvironmentFile=/var/lib/immich/env
+ExecStart=node /var/lib/immich/app/dist/main immich
+
+SyslogIdentifier=immich
+StandardOutput=append:/var/log/immich/immich.log
+StandardError=append:/var/log/immich/immich.log
+
+[Install]
+WantedBy=multi-user.target
