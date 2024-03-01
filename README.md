@@ -40,6 +40,14 @@ It is recommended to strip the `vector.so` to reduce memory footprint:
 sudo strip /usr/lib/postgresql/*/lib/vector.so
 ```
 
+ * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
+
+Immich uses FFmpeg to process media.
+
+Either install FFmpeg using APT by `sudo apt install ffmpeg` (not recommended due to Ubuntu shipping older versions),
+
+or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it to `/usr/bin`.
+
 ### Other APT packages
 
 ``` bash
