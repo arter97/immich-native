@@ -30,16 +30,10 @@ As the time of writing, Node.js v20 LTS, PostgreSQL 16 and Redis 7.2.4 was used.
 
  * [pgvector](https://github.com/pgvector/pgvector)
 
-As the time of writing, pgvector v0.6.0 was used.
-
-You need the `postgresql-server-dev(-16)` package installed to build and install pgvector.
-
-It comes with a lot of other dependencies, but you can remove it all after pgvector is built and installed.
-
-It is recommended to strip the `vector.so` to reduce memory footprint:
+pgvector is included in the official PostgreSQL's APT repository:
 
 ``` bash
-sudo strip /usr/lib/postgresql/*/lib/vector.so
+sudo apt install postgresql(-16)-pgvector
 ```
 
  * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
