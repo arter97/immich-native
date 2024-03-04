@@ -103,6 +103,20 @@ Clone this repository to somewhere anyone can access (like /tmp) and run `instal
 
 Anytime Immich is updated, all you have to do is run it again.
 
+In summary, the `install.sh` script does the following:
+
+#### 1. Clones and builds Immich.
+
+#### 2. Installs Immich to `/var/lib/immich` with minor patches.
+
+  * Sets up a dedicated Python venv to `/var/lib/immich/app/machine-learning/venv`.
+
+  * Replaces `/usr/src` to `/var/lib/immich`.
+
+  * Limits listening host from 0.0.0.0 to 127.0.0.1 for microservices and machine-learning.
+
+  * Installs systemd services.
+
 ## Done!
 
 Your Immich installation should be running at :3001 port.
