@@ -142,17 +142,6 @@ EOF
 # Cleanup
 rm -rf $TMP
 
-# Installing systemd services
-echo "Installing systemd services"
-
-cd "$BASEDIR"
-sudo cp immich*.service /etc/systemd/system/
-sudo systemctl daemon-reload
-for i in immich*.service; do
-  sudo systemctl enable $i
-  sudo systemctl start $i
-done
-
 echo
 echo "Done"
 echo

@@ -115,7 +115,18 @@ In summary, the `install.sh` script does the following:
 
   * Limits listening host from 0.0.0.0 to 127.0.0.1 for microservices and machine-learning.
 
-  * Installs systemd services.
+## 6. Install systemd services
+
+Because the install script switches to the immich user during installation, you must install systemd services manually:
+
+``` bash
+sudo cp immich*.service /etc/systemd/system/
+sudo systemctl daemon-reload
+for i in immich*.service; do
+  sudo systemctl enable $i
+  sudo systemctl start $i
+done
+```
 
 ## Done!
 
