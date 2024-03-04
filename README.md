@@ -22,7 +22,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * [Node.js](https://github.com/nodesource/distributions)
 
- * [PostgreSQL](https://www.postgresql.org/download/linux/ubuntu)
+ * [PostgreSQL](https://www.postgresql.org/download/linux)
 
  * [Redis](https://redis.io/docs/install/install-redis/install-redis-on-linux)
 
