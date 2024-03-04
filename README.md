@@ -47,7 +47,7 @@ or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it t
 ### Other APT packages
 
 ``` bash
-sudo apt install python3-venv python3-dev
+sudo apt install python3-venv python3-dev uuid-runtime
 ```
 
 A separate Python's virtualenv will be stored to `/var/lib/immich`.
