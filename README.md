@@ -12,6 +12,8 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * `mimalloc` is deliberately disabled as this is a native install and sharing system library makes more sense.
 
+ * `pgvector` is used instead of `pgvecto.rs` that the official Immich uses to remove an additional Rust build dependency.
+
  * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation. Only the main Immich service's port, 3001, is opened to 0.0.0.0.
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported.
