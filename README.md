@@ -16,7 +16,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation. Only the main Immich service's port, 3001, is opened to 0.0.0.0.
 
- * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported.
+ * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
 
 ## 1. Install dependencies
 
