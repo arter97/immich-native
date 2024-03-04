@@ -135,3 +135,30 @@ Your Immich installation should be running at :3001 port.
 Immich will additionally use 3002 and 3003 ports, but those will only listen from localhost (127.0.0.1).
 
 Please add firewall rules and apply https proxy and secure your Immich instance.
+
+## Uninstallation
+
+``` bash
+# Remove Immich systemd services
+for i in immich*.service; do
+  sudo systemctl stop $i
+  sudo systemctl disable $i
+done
+sudo rm /etc/systemd/system/immich*.service
+sudo systemctl daemon-reload
+
+# Remove Immich files
+rm -rf /var/lib/immich
+
+# Delete immich user
+deluser immich
+
+# Remove Immich DB
+sudo -u postgres psql
+postgres=# drop user immich;
+postgres=# drop database immich;
+postgres=# \q
+
+# Optionally remove dependencies
+# Review /var/log/apt/history.log and remove packages you've installed
+```
