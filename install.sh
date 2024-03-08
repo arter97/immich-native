@@ -143,5 +143,5 @@ EOF
 rm -rf $TMP
 
 echo
-echo "Done"
+echo "Done. Please install the systemd services to start using Immich."
 echo
