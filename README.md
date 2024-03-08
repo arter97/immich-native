@@ -139,13 +139,15 @@ Please add firewall rules and apply https proxy and secure your Immich instance.
 ## Uninstallation
 
 ``` bash
+# Run as root!
+
 # Remove Immich systemd services
 for i in immich*.service; do
-  sudo systemctl stop $i
-  sudo systemctl disable $i
+  systemctl stop $i
+  systemctl disable $i
 done
-sudo rm /etc/systemd/system/immich*.service
-sudo systemctl daemon-reload
+rm /etc/systemd/system/immich*.service
+systemctl daemon-reload
 
 # Remove Immich files
 rm -rf /var/lib/immich
