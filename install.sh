@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-TAG=v1.99.0
+TAG=v1.100.0
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -100,7 +100,7 @@ ln -s $IMMICH_PATH/upload $APP/
 ln -s $IMMICH_PATH/upload $APP/machine-learning/
 
 # Use 127.0.0.1 for microservices
-sed -i -e "s@app.listen(port)@app.listen(port, '127.0.0.1')@g" $APP/dist/microservices/main.js
+sed -i -e "s@app.listen(port)@app.listen(port, '127.0.0.1')@g" $APP/dist/main.js
 
 # Custom start.sh script
 cat <<EOF > $APP/start.sh
