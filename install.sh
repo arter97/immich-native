@@ -99,7 +99,7 @@ mkdir -p $IMMICH_PATH/upload
 ln -s $IMMICH_PATH/upload $APP/
 ln -s $IMMICH_PATH/upload $APP/machine-learning/
 
-# Use 127.0.0.1 for microservices
+# Use 127.0.0.1
 sed -i -e "s@app.listen(port)@app.listen(port, '127.0.0.1')@g" $APP/dist/main.js
 
 # Custom start.sh script
