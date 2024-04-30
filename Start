@@ -1,0 +1,27 @@
+#!/bin/bash
+# Bash Menu Script Example
+
+ImmichNative='Selection Installation Type: '
+options=("Backup-Only" "New-Install" "Run-As-Service" "Upgrade-W/Backup" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Backup-Only")
+            echo "This will only make a copy of your current install folder,"
+            sudo cp -rp /var/lib/immich /var/lib/immich-$(uuidgen)
+            ;;
+        "New-Install")
+            echo "Fresh Install"
+            ;;
+        "Run-As-Service")
+            echo "This will generate scripts, and enable them to run Immich as a service."
+            ;;
+        "Upgrade-W/Backup")
+            echo "This will backup your Immich install folder, then run through the current install script."
+            ;;
+        "Quit")
+            break
+            ;;
+        *) echo "Invalid Option $REPLY";;
+    esac
+done
