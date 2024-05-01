@@ -77,7 +77,11 @@ python3 -m venv $APP/machine-learning/venv
   . $APP/machine-learning/venv/bin/activate
   pip3 install poetry
   cd machine-learning
-  # pip install poetry
+  if false; then # Set this to true to force poetry update
+    # Allow Python 3.12 (e.g., Ubuntu 24.04)
+    sed -i -e 's/<3.12/<4/g' pyproject.toml
+    poetry update
+  fi
   poetry install --no-root --with dev --with cpu
   cd ..
 )
