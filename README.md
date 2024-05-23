@@ -20,6 +20,8 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
 
+ * JPEG XL support may differ official Immich due to base-image's dependency differences.
+
 ## 1. Install dependencies
 
  * [Node.js](https://github.com/nodesource/distributions)
