@@ -6,8 +6,6 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros.
 
- * If your distro is not running Python v3.10 or v3.11 (e.g., Ubuntu 24.04), you may need to force a poetry update. Find `if false` in `install.sh`, and set it to true.
-
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README and `install.sh`'s `$IMMICH_PATH`.
 
  * The [install.sh](install.sh) script currently is using Immich v1.105.1. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$TAG` to something more recent.
