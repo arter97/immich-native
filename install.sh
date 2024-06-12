@@ -96,6 +96,16 @@ ln -sf $IMMICH_PATH/app/resources $IMMICH_PATH/
 mkdir -p $IMMICH_PATH/cache
 sed -i -e "s@\"/cache\"@\"$IMMICH_PATH/cache\"@g" $APP/machine-learning/app/config.py
 
+# Install GeoNames
+cd $IMMICH_PATH/app/resources
+wget -o - https://download.geonames.org/export/dump/admin1CodesASCII.txt &
+wget -o - https://download.geonames.org/export/dump/admin2Codes.txt &
+wget -o - https://download.geonames.org/export/dump/cities500.zip &
+wait
+unzip cities500.zip
+date --iso-8601=seconds | tr -d "\n" > geodata-date.txt
+rm cities500.zip
+
 # Install sharp
 cd $APP
 npm install sharp
