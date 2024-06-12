@@ -29,6 +29,7 @@ if [[ "$USER" != "immich" ]]; then
 fi
 
 BASEDIR=$(dirname "$0")
+umask 077
 
 rm -rf $APP
 mkdir -p $APP
@@ -37,6 +38,7 @@ mkdir -p $APP
 # This expects immich user's home directory to be on $IMMICH_PATH/home
 rm -rf $IMMICH_PATH/home
 mkdir -p $IMMICH_PATH/home
+echo 'umask 077' > $IMMICH_PATH/home/.bashrc
 
 TMP=/tmp/immich-$(uuidgen)
 git clone https://github.com/immich-app/immich $TMP
