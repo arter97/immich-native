@@ -44,8 +44,8 @@ sudo apt install postgresql(-16)-pgvector
 
 Immich uses FFmpeg to process media.
 
-Either install FFmpeg using APT by `sudo apt install ffmpeg` (not recommended due to Ubuntu shipping older versions),
-
+FFmpeg provided by the distro is typically too old.
+Either install it from [jellyfin](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
 or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it to `/usr/bin`.
 
 ### Other APT packages
