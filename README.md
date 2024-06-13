@@ -2,6 +2,8 @@
 
 This repository provides instructions and helper scripts to install [Immich](https://github.com/immich-app/immich) without Docker, natively.
 
+macOS installation is available in the [README-macOS.md](./README-macOS.md)
+
 ### Notes
 
  * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros.
