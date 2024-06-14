@@ -4,9 +4,9 @@ set -xeuo pipefail
 
 TAG=v1.106.4
 
-UNAME=$(uname)
-
 IMMICH_PATH=/var/lib/immich
+
+UNAME=$(uname)
 
 if [ "$UNAME" = "Darwin" ]; then
   # we select a path that is writable and doesn't interfere with brew or other package managers

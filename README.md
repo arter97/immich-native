@@ -10,7 +10,7 @@ macOS installation is available in the [README-macOS.md](./README-macOS.md)
 
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README and `install.sh`'s `$IMMICH_PATH`.
 
- * The [install.sh](install.sh) script currently is using Immich v1.106.3. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$TAG` to something more recent.
+ * The [install.sh](install.sh) script currently is using Immich v1.106.4. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$TAG` to something more recent.
 
  * `mimalloc` is deliberately disabled as this is a native install and sharing system library makes more sense.
 
