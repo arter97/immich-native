@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-TAG=v1.106.3
+TAG=v1.106.4
 
 UNAME=$(uname)
 
@@ -41,7 +41,19 @@ if [[ "$USER" != "immich" ]]; then
   chown immich:immich /var/log/immich
 
   echo "Restarting the script as user immich"
-  exec sudo -u immich $0 $*
+  sudo -u immich $0 $* && {
+    echo
+    if [ "$UNAME" = "Darwin" ]; then
+      echo "Done. Installing the LaunchDaemon files in /Library/LaunchDaemons and loading."
+      cp com.immich*plist /Library/LaunchDaemons/ && \
+      launchctl load -w /Library/LaunchDaemons/com.immich.plist && \
+      launchctl load -w /Library/LaunchDaemons/com.immich.machine.learning.plist
+    else
+      echo "Done. Please install the systemd services to start using Immich."
+    fi
+    echo
+  }
+  exit 
 fi
 
 BASEDIR=$(dirname "$0")
@@ -56,9 +68,7 @@ rm -rf $IMMICH_PATH/home
 mkdir -p $IMMICH_PATH/home
 echo 'umask 077' > $IMMICH_PATH/home/.bashrc
 
-if [ "$UNAME" = "Darwin" ]; then
-  export HOME=$IMMICH_PATH/home
-fi
+export HOME=$IMMICH_PATH/home
 
 TMP="/tmp/immich-$(uuidgen)"
 git clone https://github.com/immich-app/immich $TMP
@@ -149,7 +159,10 @@ sed -i -e "s@app.listen(port)@app.listen(port, '127.0.0.1')@g" $APP/dist/main.js
 cat <<EOF > $APP/start.sh
 #!/bin/bash
 
-PATH=\$PATH:/usr/local/bin
+if [ "$UNAME" = "Darwin" ]; then
+export HOME=$IMMICH_PATH/home
+  export HOME=$IMMICH_PATH/home
+fi
 
 set -a
 . $IMMICH_PATH/env
@@ -187,11 +200,3 @@ EOF
 
 # Cleanup
 rm -rf $TMP
-
-echo
-if [ "$UNAME" = "Darwin" ]; then
-  echo "Done. Please install the LaunchDaemon files in /Library/LaunchDaemons and load to begin using Immich."
-else
-  echo "Done. Please install the systemd services to start using Immich."
-fi
-echo
