@@ -2,21 +2,37 @@
 
 set -xeuo pipefail
 
-TAG=v1.106.3
+TAG=v1.106.4
+
+UNAME=$(uname)
 
 IMMICH_PATH=/var/lib/immich
+
+if [ "$UNAME" = "Darwin" ]; then
+  # we select a path that is writable and doesn't interfere with brew or other package managers
+  IMMICH_PATH=/opt/services/immich
+fi
+
 APP=$IMMICH_PATH/app
 
 if [[ "$USER" != "immich" ]]; then
-  # Disable systemd services, if installed
-  (
-    for i in immich*.service; do
-      systemctl stop $i && \
-        systemctl disable $i && \
-        rm /etc/systemd/system/$i &&
-        systemctl daemon-reload
+  if [ "$UNAME" = "Darwin" ]; then
+    for i in com.immich*.plist; do
+      [ -f /Library/LaunchDaemons/$i ] && \
+      launchctl unload -w /Library/LaunchDaemons/$i && \
+      rm -f /Library/LaunchDaemons/$i
     done
-  ) || true
+  else
+    # Disable systemd services, if installed
+    (
+      for i in immich*.service; do
+        systemctl stop $i && \
+          systemctl disable $i && \
+          rm /etc/systemd/system/$i &&
+          systemctl daemon-reload
+      done
+    ) || true
+  fi
 
   mkdir -p $IMMICH_PATH
   chown immich:immich $IMMICH_PATH
@@ -25,7 +41,19 @@ if [[ "$USER" != "immich" ]]; then
   chown immich:immich /var/log/immich
 
   echo "Restarting the script as user immich"
-  exec sudo -u immich $0 $*
+  sudo -u immich $0 $* && {
+    echo
+    if [ "$UNAME" = "Darwin" ]; then
+      echo "Done. Installing the LaunchDaemon files in /Library/LaunchDaemons and loading."
+      cp com.immich*plist /Library/LaunchDaemons/ && \
+      launchctl load -w /Library/LaunchDaemons/com.immich.plist && \
+      launchctl load -w /Library/LaunchDaemons/com.immich.machine.learning.plist
+    else
+      echo "Done. Please install the systemd services to start using Immich."
+    fi
+    echo
+  }
+  exit 
 fi
 
 BASEDIR=$(dirname "$0")
@@ -40,7 +68,9 @@ rm -rf $IMMICH_PATH/home
 mkdir -p $IMMICH_PATH/home
 echo 'umask 077' > $IMMICH_PATH/home/.bashrc
 
-TMP=/tmp/immich-$(uuidgen)
+export HOME=$IMMICH_PATH/home
+
+TMP="/tmp/immich-$(uuidgen)"
 git clone https://github.com/immich-app/immich $TMP
 cd $TMP
 git reset --hard $TAG
@@ -104,7 +134,13 @@ wget -o - https://download.geonames.org/export/dump/admin2Codes.txt &
 wget -o - https://download.geonames.org/export/dump/cities500.zip &
 wait
 unzip cities500.zip
-date --iso-8601=seconds | tr -d "\n" > geodata-date.txt
+
+if [ "$UNAME" = "Darwin" ]; then
+  date -Iseconds | tr -d "\n" > geodata-date.txt
+else
+  date --iso-8601=seconds | tr -d "\n" > geodata-date.txt
+fi
+
 rm cities500.zip
 
 # Install sharp
@@ -123,6 +159,11 @@ sed -i -e "s@app.listen(port)@app.listen(port, '127.0.0.1')@g" $APP/dist/main.js
 cat <<EOF > $APP/start.sh
 #!/bin/bash
 
+if [ "$UNAME" = "Darwin" ]; then
+export HOME=$IMMICH_PATH/home
+  export HOME=$IMMICH_PATH/home
+fi
+
 set -a
 . $IMMICH_PATH/env
 set +a
@@ -133,6 +174,8 @@ EOF
 
 cat <<EOF > $APP/machine-learning/start.sh
 #!/bin/bash
+
+PATH=\$PATH:/usr/local/bin
 
 set -a
 . $IMMICH_PATH/env
@@ -157,7 +200,3 @@ EOF
 
 # Cleanup
 rm -rf $TMP
-
-echo
-echo "Done. Please install the systemd services to start using Immich."
-echo
