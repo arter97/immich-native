@@ -55,6 +55,7 @@ sudo apt install --no-install-recommends \
         uuid-runtime \
         autoconf \
         build-essential \
+        unzip \
         jq \
         perl \
         libnet-ssleay-perl \
