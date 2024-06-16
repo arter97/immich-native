@@ -4,7 +4,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
 ### Notes
 
- * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros.
+ * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros. If you want to run this on a macOS, see [4v3ngR's unofficial macOS port](https://github.com/4v3ngR/immich-native-macos).
 
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README and `install.sh`'s `$IMMICH_PATH`.
 
