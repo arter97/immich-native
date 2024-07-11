@@ -44,6 +44,22 @@ TMP=/tmp/immich-$(uuidgen)
 git clone https://github.com/immich-app/immich $TMP
 cd $TMP
 git reset --hard $TAG
+rm -rf .git
+
+# Use 127.0.0.1
+find . -type f \( -name '*.ts' -o -name '*.js' \) -exec grep app.listen {} + | \
+  sed 's/.*app.listen//' | grep -v '()' | grep '^(' | \
+  tr -d "[:blank:]" | awk -F"[(),]" '{print $2}' | sort | uniq | while read port; do
+    find . -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i -e "s@app.listen(${port})@app.listen(${port}, '127.0.0.1')@g" {} +
+done
+find . -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i -e "s@PrometheusExporter({ port })@PrometheusExporter({ host: '127.0.0.1', port: port })@g" {} +
+grep -RlE "\"0\.0\.0\.0\"|'0\.0\.0\.0'" | xargs -n1 sed -i -e "s@'0\.0\.0\.0'@'127.0.0.1'@g" -e 's@"0\.0\.0\.0"@"127.0.0.1"@g'
+
+# Replace /usr/src
+grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
+ln -sf $IMMICH_PATH/app/resources $IMMICH_PATH/
+mkdir -p $IMMICH_PATH/cache
+grep -RlE "\"/cache\"|'/cache'" | xargs -n1 sed -i -e "s@\"/cache\"@\"$IMMICH_PATH/cache\"@g" -e "s@'/cache'@'$IMMICH_PATH/cache'@g"
 
 # immich-server
 cd server
@@ -84,13 +100,6 @@ python3 -m venv $APP/machine-learning/venv
 )
 cp -a machine-learning/ann machine-learning/start.sh machine-learning/app $APP/machine-learning/
 
-# Replace /usr/src
-cd $APP
-grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
-ln -sf $IMMICH_PATH/app/resources $IMMICH_PATH/
-mkdir -p $IMMICH_PATH/cache
-sed -i -e "s@\"/cache\"@\"$IMMICH_PATH/cache\"@g" $APP/machine-learning/app/config.py
-
 # Install GeoNames
 cd $IMMICH_PATH/app/resources
 wget -o - https://download.geonames.org/export/dump/admin1CodesASCII.txt &
@@ -109,9 +118,6 @@ npm install sharp
 mkdir -p $IMMICH_PATH/upload
 ln -s $IMMICH_PATH/upload $APP/
 ln -s $IMMICH_PATH/upload $APP/machine-learning/
-
-# Use 127.0.0.1
-sed -i -e "s@app.listen(port)@app.listen(port, '127.0.0.1')@g" $APP/dist/main.js
 
 # Custom start.sh script
 cat <<EOF > $APP/start.sh
