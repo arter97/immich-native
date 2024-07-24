@@ -106,6 +106,7 @@ cd $IMMICH_PATH/app/geodata
 wget -o - https://download.geonames.org/export/dump/admin1CodesASCII.txt &
 wget -o - https://download.geonames.org/export/dump/admin2Codes.txt &
 wget -o - https://download.geonames.org/export/dump/cities500.zip &
+wget -o - https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson &
 wait
 unzip cities500.zip
 date --iso-8601=seconds | tr -d "\n" > geodata-date.txt
