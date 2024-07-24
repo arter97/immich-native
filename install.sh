@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-TAG=v1.108.0
+TAG=v1.109.2
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
