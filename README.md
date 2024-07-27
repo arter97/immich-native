@@ -4,11 +4,11 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
 ### Notes
 
- * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros.
+ * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros. If you want to run this on a macOS, see [4v3ngR's unofficial macOS port](https://github.com/4v3ngR/immich-native-macos).
 
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README and `install.sh`'s `$IMMICH_PATH`.
 
- * The [install.sh](install.sh) script currently is using Immich v1.102.3. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$TAG` to something more recent.
+ * The [install.sh](install.sh) script currently is using Immich v1.109.2. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$TAG` to something more recent.
 
  * `mimalloc` is deliberately disabled as this is a native install and sharing system library makes more sense.
 
@@ -17,6 +17,8 @@ This repository provides instructions and helper scripts to install [Immich](htt
  * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation. Only the main Immich service's port, 3001, is opened to 0.0.0.0.
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
+
+ * JPEG XL support may differ official Immich due to base-image's dependency differences.
 
 ## 1. Install dependencies
 
@@ -40,14 +42,42 @@ sudo apt install postgresql(-16)-pgvector
 
 Immich uses FFmpeg to process media.
 
-Either install FFmpeg using APT by `sudo apt install ffmpeg` (not recommended due to Ubuntu shipping older versions),
-
+FFmpeg provided by the distro is typically too old.
+Either install it from [jellyfin](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
 or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it to `/usr/bin`.
 
 ### Other APT packages
 
 ``` bash
-sudo apt install python3-venv python3-dev uuid-runtime
+sudo apt install --no-install-recommends \
+        python3-venv \
+        python3-dev \
+        uuid-runtime \
+        autoconf \
+        build-essential \
+        unzip \
+        jq \
+        perl \
+        libnet-ssleay-perl \
+        libio-socket-ssl-perl \
+        libcapture-tiny-perl \
+        libfile-which-perl \
+        libfile-chdir-perl \
+        libpkgconfig-perl \
+        libffi-checklib-perl \
+        libtest-warnings-perl \
+        libtest-fatal-perl \
+        libtest-needs-perl \
+        libtest2-suite-perl \
+        libsort-versions-perl \
+        libpath-tiny-perl \
+        libtry-tiny-perl \
+        libterm-table-perl \
+        libany-uri-escape-perl \
+        libmojolicious-perl \
+        libfile-slurper-perl \
+        liblcms2-2 \
+        wget
 ```
 
 A separate Python's virtualenv will be stored to `/var/lib/immich`.
