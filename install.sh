@@ -59,7 +59,7 @@ grep -RlE "\"0\.0\.0\.0\"|'0\.0\.0\.0'" | xargs -n1 sed -i -e "s@'0\.0\.0\.0'@'1
 grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
 mkdir -p $IMMICH_PATH/cache
 grep -RlE "\"/cache\"|'/cache'" | xargs -n1 sed -i -e "s@\"/cache\"@\"$IMMICH_PATH/cache\"@g" -e "s@'/cache'@'$IMMICH_PATH/cache'@g"
-grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$IMMICH_PATH/app\"@g" -e "s@'/build'@'$IMMICH_PATH/app'@g"
+grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$APP\"@g" -e "s@'/build'@'$APP'@g"
 
 # immich-server
 cd server
@@ -101,8 +101,8 @@ python3 -m venv $APP/machine-learning/venv
 cp -a machine-learning/ann machine-learning/start.sh machine-learning/app $APP/machine-learning/
 
 # Install GeoNames
-mkdir -p $IMMICH_PATH/app/geodata
-cd $IMMICH_PATH/app/geodata
+mkdir -p $APP/geodata
+cd $APP/geodata
 wget -o - https://download.geonames.org/export/dump/admin1CodesASCII.txt &
 wget -o - https://download.geonames.org/export/dump/admin2Codes.txt &
 wget -o - https://download.geonames.org/export/dump/cities500.zip &
