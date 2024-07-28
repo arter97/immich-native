@@ -101,8 +101,8 @@ python3 -m venv $APP/machine-learning/venv
 cp -a machine-learning/ann machine-learning/start.sh machine-learning/app $APP/machine-learning/
 
 # Install GeoNames
-mkdir -p $IMMICH_PATH/app/geodata
-cd $IMMICH_PATH/app/geodata
+mkdir -p $APP/geodata
+cd $APP/geodata
 wget -o - https://download.geonames.org/export/dump/admin1CodesASCII.txt &
 wget -o - https://download.geonames.org/export/dump/admin2Codes.txt &
 wget -o - https://download.geonames.org/export/dump/cities500.zip &
