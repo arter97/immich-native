@@ -77,6 +77,7 @@ sudo apt install --no-install-recommends \
         libmojolicious-perl \
         libfile-slurper-perl \
         liblcms2-2 \
+        npm \
         wget
 ```
 
