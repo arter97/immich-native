@@ -4,7 +4,6 @@ Documentation=https://github.com/immich-app/immich
 Requires=redis-server.service
 Requires=postgresql.service
 Requires=immich-machine-learning.service
-Requires=immich-microservices.service
 
 [Service]
 User=immich
@@ -15,7 +14,7 @@ UMask=0077
 
 WorkingDirectory=/var/lib/immich/app
 EnvironmentFile=/var/lib/immich/env
-ExecStart=node /var/lib/immich/app/dist/main immich
+ExecStart=node /var/lib/immich/app/dist/main
 
 SyslogIdentifier=immich
 StandardOutput=append:/var/log/immich/immich.log
