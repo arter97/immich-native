@@ -41,7 +41,7 @@ mkdir -p $IMMICH_PATH/home
 echo 'umask 077' > $IMMICH_PATH/home/.bashrc
 
 TMP=/tmp/immich-$(uuidgen)
-git clone https://github.com/immich-app/immich $TMP
+git clone https://github.com/immich-app/immich $TMP --depth 1 --branch $TAG
 cd $TMP
 git reset --hard $TAG
 rm -rf .git
