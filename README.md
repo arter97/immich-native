@@ -147,7 +147,7 @@ In summary, the `install.sh` script does the following:
 
 ## Done!
 
-Your Immich installation should be running at 3001 port, listening from localhost (127.0.0.1).
+Your Immich installation should be running at 2283 port, listening from localhost (127.0.0.1).
 
 Immich will additionally use localhost's 3003 ports.
 
