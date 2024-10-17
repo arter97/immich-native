@@ -159,7 +159,7 @@ Please add firewall rules and apply https proxy and secure your Immich instance.
 # Run as root!
 
 # Remove Immich systemd services
-for i in immich*.service; do
+systemctl list-unit-files --type=service | grep "^immich" | while read i unused; do
   systemctl stop $i
   systemctl disable $i
 done

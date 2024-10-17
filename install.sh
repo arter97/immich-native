@@ -10,7 +10,7 @@ APP=$IMMICH_PATH/app
 if [[ "$USER" != "immich" ]]; then
   # Disable systemd services, if installed
   (
-    for i in immich*.service; do
+    systemctl list-unit-files --type=service | grep "^immich" | while read i unused; do
       systemctl stop $i && \
         systemctl disable $i && \
         rm /*/systemd/system/$i &&
