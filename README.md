@@ -163,7 +163,7 @@ for i in immich*.service; do
   systemctl stop $i
   systemctl disable $i
 done
-rm /etc/systemd/system/immich*.service
+rm /lib/systemd/system/immich*.service
 systemctl daemon-reload
 
 # Remove Immich files

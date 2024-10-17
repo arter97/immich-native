@@ -13,7 +13,7 @@ if [[ "$USER" != "immich" ]]; then
     for i in immich*.service; do
       systemctl stop $i && \
         systemctl disable $i && \
-        rm /etc/systemd/system/$i &&
+        rm /*/systemd/system/$i &&
         systemctl daemon-reload
     done
   ) || true
@@ -28,7 +28,7 @@ if [[ "$USER" != "immich" ]]; then
   sudo -u immich $0 $*
 
   echo "Starting systemd services"
-  cp immich*.service /etc/systemd/system/
+  cp immich*.service /lib/systemd/system/
   systemctl daemon-reload
   for i in immich*.service; do
     systemctl enable $i
