@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-TAG=v1.117.0
+REV=v1.117.0
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -41,9 +41,14 @@ mkdir -p $IMMICH_PATH/home
 echo 'umask 077' > $IMMICH_PATH/home/.bashrc
 
 TMP=/tmp/immich-$(uuidgen)
-git clone https://github.com/immich-app/immich $TMP
+if [[ $REV =~ ^[0-9A-Fa-f]+$ ]]; then
+  # REV is a full commit hash, full clone is required
+  git clone https://github.com/immich-app/immich $TMP
+else
+  git clone https://github.com/immich-app/immich $TMP --depth=1 -b $REV
+fi
 cd $TMP
-git reset --hard $TAG
+git reset --hard $REV
 rm -rf .git
 
 # Use 127.0.0.1
