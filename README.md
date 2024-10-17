@@ -14,7 +14,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * `pgvector` is used instead of `pgvecto.rs` that the official Immich uses to remove an additional Rust build dependency.
 
- * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation. Only the main Immich service's port, 3001, is opened to 0.0.0.0.
+ * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation.
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
 
@@ -149,7 +149,7 @@ In summary, the `install.sh` script does the following:
 
 Your Immich installation should be running at 3001 port, listening from localhost (127.0.0.1).
 
-Immich will additionally use localhost's 3002 and 3003 ports.
+Immich will additionally use localhost's 3003 ports.
 
 Please add firewall rules and apply https proxy and secure your Immich instance.
 
