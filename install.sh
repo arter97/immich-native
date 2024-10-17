@@ -24,8 +24,17 @@ if [[ "$USER" != "immich" ]]; then
   mkdir -p /var/log/immich
   chown immich:immich /var/log/immich
 
-  echo "Restarting the script as user immich"
-  exec sudo -u immich $0 $*
+  echo "Forking the script as user immich"
+  sudo -u immich $0 $*
+
+  echo "Starting systemd services"
+  cp immich*.service /etc/systemd/system/
+  systemctl daemon-reload
+  for i in immich*.service; do
+    systemctl enable $i
+    systemctl start $i
+  done
+  exit 0
 fi
 
 BASEDIR=$(dirname "$0")
@@ -166,5 +175,5 @@ EOF
 rm -rf $TMP
 
 echo
-echo "Done. Please install the systemd services to start using Immich."
+echo "Done."
 echo

@@ -145,19 +145,6 @@ In summary, the `install.sh` script does the following:
 
   * Limits listening host from 0.0.0.0 to 127.0.0.1. If you do not want this to happen (make sure you fully understand the security risks!), comment out the `sed` command in `install.sh`'s "Use 127.0.0.1" part.
 
-## 6. Install systemd services
-
-Because the install script switches to the immich user during installation, you must install systemd services manually:
-
-``` bash
-sudo cp immich*.service /etc/systemd/system/
-sudo systemctl daemon-reload
-for i in immich*.service; do
-  sudo systemctl enable $i
-  sudo systemctl start $i
-done
-```
-
 ## Done!
 
 Your Immich installation should be running at 3001 port, listening from localhost (127.0.0.1).
