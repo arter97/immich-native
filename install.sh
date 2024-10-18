@@ -167,6 +167,7 @@ cd $APP/machine-learning
 : "\${IMMICH_PORT:=3003}"
 : "\${MACHINE_LEARNING_WORKERS:=1}"
 : "\${MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S:=2}"
+: "\${MACHINE_LEARNING_WORKER_TIMEOUT:=300}"
 
 exec gunicorn app.main:app \
 	-k app.config.CustomUvicornWorker \
