@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v1.118.2
+REV=v1.119.1
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -40,7 +40,7 @@ fi
 BASEDIR=$(dirname "$0")
 umask 077
 
-rm -rf $APP
+rm -rf $APP $APP/../i18n
 mkdir -p $APP
 
 # Wipe npm, pypoetry, etc
@@ -97,6 +97,7 @@ cp -a web/build $APP/www
 cp -a server/resources server/package.json server/package-lock.json $APP/
 cp -a server/start*.sh $APP/
 cp -a LICENSE $APP/
+cp -a i18n $APP/../
 cd $APP
 npm cache clean --force
 cd -
