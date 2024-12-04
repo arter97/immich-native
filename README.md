@@ -112,7 +112,8 @@ sudo -u postgres psql
 postgres=# create database immich;
 postgres=# create user immich with encrypted password 'YOUR_STRONG_RANDOM_PW';
 postgres=# grant all privileges on database immich to immich;
-postgrse=# ALTER USER immich WITH SUPERUSER;
+postgres=# ALTER USER immich WITH SUPERUSER;
+postgres=# CREATE EXTENSION IF NOT EXISTS vector;
 postgres=# \q
 ```
 
