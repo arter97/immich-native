@@ -28,14 +28,14 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * [Redis](https://redis.io/docs/install/install-redis/install-redis-on-linux)
 
-As the time of writing, Node.js v20 LTS, PostgreSQL 16 and Redis 7.2.4 was used.
+As the time of writing, Node.js v22 LTS, PostgreSQL 17 and Redis 7.4.1 was used.
 
  * [pgvector](https://github.com/pgvector/pgvector)
 
 pgvector is included in the official PostgreSQL's APT repository:
 
 ``` bash
-sudo apt install postgresql(-16)-pgvector
+sudo apt install postgresql(-17)-pgvector
 ```
 
  * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
