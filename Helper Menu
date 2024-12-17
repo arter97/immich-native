@@ -8,12 +8,12 @@ do
     case $opt in
         "Backup-Only")
             echo "This will only make a copy of your current install folder,"
-            sudo cp -rp /var/lib/immich /var/lib/immich-$(uuidgen)
+            sudo cp -rp /var/lib/immich /var/lib/immich-$(date +%s)
             ;;
         "New-Install")
             echo "Fresh Install"
             ;;
-        "Run-As-Service")
+        "Initialize Services")
             echo "This will generate scripts, and enable them to run Immich as a service."
             ;;
         "Upgrade-W/Backup")
