@@ -8,13 +8,13 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README and `install.sh`'s `$IMMICH_PATH`.
 
- * The [install.sh](install.sh) script currently is using Immich v1.109.2. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$TAG` to something more recent.
+ * The [install.sh](install.sh) script currently is using Immich v1.122.3. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$REV` to something more recent.
 
  * `mimalloc` is deliberately disabled as this is a native install and sharing system library makes more sense.
 
  * `pgvector` is used instead of `pgvecto.rs` that the official Immich uses to remove an additional Rust build dependency.
 
- * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation. Only the main Immich service's port, 3001, is opened to 0.0.0.0.
+ * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation.
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
 
@@ -28,14 +28,14 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * [Redis](https://redis.io/docs/install/install-redis/install-redis-on-linux)
 
-As the time of writing, Node.js v20 LTS, PostgreSQL 16 and Redis 7.2.4 was used.
+As the time of writing, Node.js v22 LTS, PostgreSQL 17 and Redis 7.4.1 was used.
 
  * [pgvector](https://github.com/pgvector/pgvector)
 
 pgvector is included in the official PostgreSQL's APT repository:
 
 ``` bash
-sudo apt install postgresql(-16)-pgvector
+sudo apt install postgresql(-17)-pgvector
 ```
 
  * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
@@ -112,7 +112,8 @@ sudo -u postgres psql
 postgres=# create database immich;
 postgres=# create user immich with encrypted password 'YOUR_STRONG_RANDOM_PW';
 postgres=# grant all privileges on database immich to immich;
-postgrse=# ALTER USER immich WITH SUPERUSER;
+postgres=# ALTER USER immich WITH SUPERUSER;
+postgres=# CREATE EXTENSION IF NOT EXISTS vector;
 postgres=# \q
 ```
 
@@ -145,24 +146,11 @@ In summary, the `install.sh` script does the following:
 
   * Limits listening host from 0.0.0.0 to 127.0.0.1. If you do not want this to happen (make sure you fully understand the security risks!), comment out the `sed` command in `install.sh`'s "Use 127.0.0.1" part.
 
-## 6. Install systemd services
-
-Because the install script switches to the immich user during installation, you must install systemd services manually:
-
-``` bash
-sudo cp immich*.service /etc/systemd/system/
-sudo systemctl daemon-reload
-for i in immich*.service; do
-  sudo systemctl enable $i
-  sudo systemctl start $i
-done
-```
-
 ## Done!
 
-Your Immich installation should be running at 3001 port, listening from localhost (127.0.0.1).
+Your Immich installation should be running at 2283 port, listening from localhost (127.0.0.1).
 
-Immich will additionally use localhost's 3002 and 3003 ports.
+Immich will additionally use localhost's 3003 ports.
 
 Please add firewall rules and apply https proxy and secure your Immich instance.
 
@@ -172,11 +160,11 @@ Please add firewall rules and apply https proxy and secure your Immich instance.
 # Run as root!
 
 # Remove Immich systemd services
-for i in immich*.service; do
+systemctl list-unit-files --type=service | grep "^immich" | while read i unused; do
   systemctl stop $i
   systemctl disable $i
 done
-rm /etc/systemd/system/immich*.service
+rm /lib/systemd/system/immich*.service
 systemctl daemon-reload
 
 # Remove Immich files
