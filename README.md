@@ -175,8 +175,8 @@ deluser immich
 
 # Remove Immich DB
 sudo -u postgres psql
-postgres=# drop user immich;
 postgres=# drop database immich;
+postgres=# drop user immich;
 postgres=# \q
 
 # Optionally remove dependencies
