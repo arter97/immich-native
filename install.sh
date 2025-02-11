@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v1.125.7
+REV=v1.126.1
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
