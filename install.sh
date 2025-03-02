@@ -94,7 +94,7 @@ cd -
 
 # immich-machine-learning
 mkdir -p $APP/machine-learning
-python3 -m venv $APP/machine-learning/venv
+python3.12 -m venv $APP/machine-learning/venv
 (
   # Initiate subshell to setup venv
   . $APP/machine-learning/venv/bin/activate
