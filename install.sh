@@ -133,8 +133,10 @@ unzip cities500.zip
 date --iso-8601=seconds | tr -d "\n" > geodata-date.txt
 rm cities500.zip
 
-# Install sharp
+# Install node-gyp and sharp
 cd $APP
+rm -rf node_modules/sharp
+npm install node-gyp
 npm install sharp
 
 # Setup upload directory
