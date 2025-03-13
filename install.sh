@@ -43,7 +43,7 @@ umask 077
 rm -rf $APP $APP/../i18n
 mkdir -p $APP
 
-# Wipe npm, pypoetry, etc
+# Wipe npm, uv, etc
 # This expects immich user's home directory to be on $IMMICH_PATH/home
 rm -rf $IMMICH_PATH/home
 mkdir -p $IMMICH_PATH/home
@@ -108,9 +108,9 @@ python3 -m venv $APP/machine-learning/venv
 (
   # Initiate subshell to setup venv
   . $APP/machine-learning/venv/bin/activate
-  pip3 install poetry
+  pip3 install uv
   cd machine-learning
-  poetry install --no-root --with dev --with cpu
+  uv sync --no-install-project --no-install-workspace --extra cpu --no-cache --active --link-mode=copy
   cd ..
 )
 cp -a \
