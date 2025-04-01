@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v1.130.3
+REV=3428a876c798155a23204a41cfc8072e402fefce
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -63,7 +63,6 @@ rm -rf .git
 # Replace /usr/src
 grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
 mkdir -p $IMMICH_PATH/cache
-grep -RlE "\"/cache\"|'/cache'" | xargs -n1 sed -i -e "s@\"/cache\"@\"$IMMICH_PATH/cache\"@g" -e "s@'/cache'@'$IMMICH_PATH/cache'@g"
 grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$APP\"@g" -e "s@'/build'@'$APP'@g"
 
 # immich-server
@@ -105,11 +104,7 @@ python3 -m venv $APP/machine-learning/venv
   cd ..
 )
 cp -a \
-  machine-learning/ann \
-  machine-learning/start.sh \
-  machine-learning/log_conf.json \
-  machine-learning/gunicorn_conf.py \
-  machine-learning/app \
+  machine-learning/immich_ml \
     $APP/machine-learning/
 
 # Install GeoNames
@@ -160,16 +155,18 @@ cd $APP/machine-learning
 : "\${MACHINE_LEARNING_WORKERS:=1}"
 : "\${MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S:=2}"
 : "\${MACHINE_LEARNING_WORKER_TIMEOUT:=300}"
+: "\${MACHINE_LEARNING_CACHE_FOLDER:=$IMMICH_PATH/cache}"
+: "\${TRANSFORMERS_CACHE:=$IMMICH_PATH/cache}"
 
-exec gunicorn app.main:app \
-	-k app.config.CustomUvicornWorker \
-	-c gunicorn_conf.py \
-	-b "\$IMMICH_HOST":"\$IMMICH_PORT" \
-	-w "\$MACHINE_LEARNING_WORKERS" \
-	-t "\$MACHINE_LEARNING_WORKER_TIMEOUT" \
-	--log-config-json log_conf.json \
-	--keep-alive "\$MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S" \
-	--graceful-timeout 0
+exec gunicorn immich_ml.main:app \\
+	-k immich_ml.config.CustomUvicornWorker \\
+	-c immich_ml/gunicorn_conf.py \\
+	-b "\$IMMICH_HOST":"\$IMMICH_PORT" \\
+	-w "\$MACHINE_LEARNING_WORKERS" \\
+	-t "\$MACHINE_LEARNING_WORKER_TIMEOUT" \\
+	--log-config-json log_conf.json \\
+	--keep-alive "\$MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S" \\
+	--graceful-timeout 10
 EOF
 chmod 700 $APP/machine-learning/start.sh
 
