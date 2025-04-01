@@ -60,15 +60,6 @@ cd $TMP
 git reset --hard $REV
 rm -rf .git
 
-# Use 127.0.0.1
-find . -type f \( -name '*.ts' -o -name '*.js' \) -exec grep app.listen {} + | \
-  sed 's/.*app.listen//' | grep -v '()' | grep '^(' | \
-  tr -d "[:blank:]" | awk -F"[(),]" '{print $2}' | sort | uniq | while read port; do
-    find . -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i -e "s@app.listen(${port})@app.listen(${port}, '127.0.0.1')@g" {} +
-done
-find . -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i -e "s@PrometheusExporter({ port })@PrometheusExporter({ host: '127.0.0.1', port: port })@g" {} +
-grep -RlE "\"0\.0\.0\.0\"|'0\.0\.0\.0'" | xargs -n1 sed -i -e "s@'0\.0\.0\.0'@'127.0.0.1'@g" -e 's@"0\.0\.0\.0"@"127.0.0.1"@g'
-
 # Replace /usr/src
 grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
 mkdir -p $IMMICH_PATH/cache

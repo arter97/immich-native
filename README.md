@@ -144,7 +144,7 @@ In summary, the `install.sh` script does the following:
 
   * Replaces `/usr/src` to `/var/lib/immich`.
 
-  * Limits listening host from 0.0.0.0 to 127.0.0.1. If you do not want this to happen (make sure you fully understand the security risks!), comment out the `sed` command in `install.sh`'s "Use 127.0.0.1" part.
+  * Limits listening host from 0.0.0.0 to 127.0.0.1. If you do not want this to happen (make sure you fully understand the security risks!), change `IMMICH_HOST=127.0.0.1` to `IMMICH_HOST=0.0.0.0` from the `env` file.
 
 ## Done!
 
