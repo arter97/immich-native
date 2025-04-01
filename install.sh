@@ -171,6 +171,7 @@ exec gunicorn app.main:app \
 	--keep-alive "\$MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S" \
 	--graceful-timeout 0
 EOF
+chmod 700 $APP/machine-learning/start.sh
 
 # Migrate env file
 if [ -e "$IMMICH_PATH/env" ]; then
