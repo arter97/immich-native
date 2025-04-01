@@ -150,6 +150,8 @@ set +a
 cd $APP/machine-learning
 . venv/bin/activate
 
+set -a
+
 : "\${IMMICH_HOST:=127.0.0.1}"
 : "\${IMMICH_PORT:=3003}"
 : "\${MACHINE_LEARNING_WORKERS:=1}"
