@@ -181,7 +181,11 @@ if [ -e "$IMMICH_PATH/env" ]; then
 fi
 
 # Cleanup
-rm -rf $TMP
+rm -rf \
+  $TMP \
+  $IMMICH_PATH/home/.wget-hsts \
+  $IMMICH_PATH/home/.npm \
+  $IMMICH_PATH/home/.cache
 
 echo
 echo "Done."
