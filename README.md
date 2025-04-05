@@ -8,7 +8,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README, `install.sh`, `immich.service`, `immich-machine-learning.service`.
 
- * The [install.sh](install.sh) script currently is using Immich v1.131.2. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$REV` to something more recent.
+ * The [install.sh](install.sh) script currently is using Immich v1.131.3. It should be noted that due to the fast-evolving nature of Immich, the install script may get broken if you replace the `$REV` to something more recent.
 
  * `mimalloc` is deliberately disabled as this is a native install and sharing system library makes more sense.
 
