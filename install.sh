@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v1.135.3
+REV=v1.138.1
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -85,7 +85,7 @@ cd -
 cp -a server/node_modules server/dist server/bin $APP/
 cp -a web/build $APP/www
 cp -a server/resources server/package.json server/package-lock.json $APP/
-cp -a server/start*.sh $APP/
+cp -a server/bin/start*.sh $APP/
 cp -a LICENSE $APP/
 cp -a i18n $APP/../
 cd $APP
