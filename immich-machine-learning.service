@@ -11,7 +11,7 @@ UMask=0077
 
 WorkingDirectory=/var/lib/immich/app
 EnvironmentFile=/var/lib/immich/env
-ExecStart=/var/lib/immich/app/machine-learning/start.sh
+ExecStart=/usr/bin/bash /var/lib/immich/app/machine-learning/start.sh
 
 SyslogIdentifier=immich-machine-learning
 StandardOutput=append:/var/log/immich/immich-machine-learning.log

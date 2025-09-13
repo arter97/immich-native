@@ -14,7 +14,7 @@ UMask=0077
 
 WorkingDirectory=/var/lib/immich/app
 EnvironmentFile=/var/lib/immich/env
-ExecStart=node /var/lib/immich/app/dist/main
+ExecStart=/usr/bin/bash /var/lib/immich/app/start.sh
 
 SyslogIdentifier=immich
 StandardOutput=append:/var/log/immich/immich.log
