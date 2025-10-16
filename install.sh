@@ -140,6 +140,8 @@ cd $APP
 exec node $APP/dist/main "\$@"
 EOF
 
+chmod 700 $APP/start.sh
+
 cat <<EOF > $APP/machine-learning/start.sh
 #!/bin/bash
 
