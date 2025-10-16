@@ -4,7 +4,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
 ### Notes
 
- * This is tested on Ubuntu 22.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros. If you want to run this on a macOS, see [4v3ngR's unofficial macOS port](https://github.com/4v3ngR/immich-native-macos).
+ * This is tested on Ubuntu 22.04, 24.04 (on both x86 and aarch64) as the host distro, but it will be similar on other distros. If you want to run this on a macOS, see [4v3ngR's unofficial macOS port](https://github.com/4v3ngR/immich-native-macos).
 
  * This guide installs Immich to `/var/lib/immich`. To change it, replace it to the directory you want in this README, `install.sh`, `immich.service`, `immich-machine-learning.service`.
 
@@ -12,9 +12,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * `mimalloc` is deliberately disabled as this is a native install and sharing system library makes more sense.
 
- * `pgvector` is used instead of `pgvecto.rs` that the official Immich uses to remove an additional Rust build dependency.
-
- * Microservice and machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation.
+ * Machine-learning's host is opened to 0.0.0.0 in the default configuration. This behavior is changed to only accept 127.0.0.1 during installation.
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
 
@@ -52,6 +50,7 @@ or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it t
 
 ``` bash
 sudo apt install --no-install-recommends \
+        python3-pip \
         python3-venv \
         python3-dev \
         uuid-runtime \
@@ -155,7 +154,7 @@ Your Immich installation should be running at 2283 port, listening from localhos
 
 Immich will additionally use localhost's 3003 ports.
 
-Please add firewall rules and apply https proxy and secure your Immich instance.
+Please add firewall rules and [apply https proxy](https://docs.immich.app/administration/reverse-proxy) and secure your Immich instance.
 
 ## Uninstallation
 
