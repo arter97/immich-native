@@ -37,6 +37,22 @@ if [[ "$USER" != "immich" ]]; then
   exit 0
 fi
 
+# Sanity check, users should have VectorChord enabled
+if psql -U immich -c "SELECT 1;" > /dev/null 2>&1; then
+  # Immich is installed, check VectorChord
+  if ! psql -U immich -c "SELECT * FROM pg_extension;" | grep "vchord" > /dev/null 2>&1; then
+    echo "VectorChord is not enabled for Immich."
+    echo "Please read https://github.com/immich-app/immich/blob/main/docs/docs/administration/postgres-standalone.md"
+    exit 1
+  fi
+fi
+if [ -e "$IMMICH_PATH/env" ]; then
+  if grep -q DB_VECTOR_EXTENSION "$IMMICH_PATH/env"; then
+    echo "Please remove DB_VECTOR_EXTENSION from your env file"
+    exit 1
+  fi
+fi
+
 BASEDIR=$(dirname "$0")
 umask 077
 

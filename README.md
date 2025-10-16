@@ -38,6 +38,8 @@ pgvector is included in the official PostgreSQL's APT repository:
 sudo apt install postgresql(-17)-pgvector
 ```
 
+ * [VectorChord](https://docs.vectorchord.ai/vectorchord/getting-started/installation.html)
+
  * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
 
 Immich uses FFmpeg to process media.
@@ -114,6 +116,7 @@ postgres=# create user immich with encrypted password 'YOUR_STRONG_RANDOM_PW';
 postgres=# grant all privileges on database immich to immich;
 postgres=# ALTER USER immich WITH SUPERUSER;
 postgres=# CREATE EXTENSION IF NOT EXISTS vector;
+postgres=# CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
 postgres=# \q
 ```
 

@@ -9,7 +9,6 @@ NODE_ENV=production
 
 DB_USERNAME=immich
 DB_DATABASE_NAME=immich
-DB_VECTOR_EXTENSION=pgvector
 
 # The location where your uploaded files are stored
 UPLOAD_LOCATION=./library
