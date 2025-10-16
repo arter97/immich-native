@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v1.135.3
+REV=v2.1.0
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -59,7 +59,7 @@ umask 077
 rm -rf $APP $APP/../i18n
 mkdir -p $APP
 
-# Wipe npm, uv, etc
+# Wipe pnpm, uv, etc
 # This expects immich user's home directory to be on $IMMICH_PATH/home
 rm -rf $IMMICH_PATH/home
 mkdir -p $IMMICH_PATH/home
@@ -81,31 +81,33 @@ grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
 mkdir -p $IMMICH_PATH/cache
 grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$APP\"@g" -e "s@'/build'@'$APP'@g"
 
+# Setup pnpm
+corepack use pnpm@latest
+
 # immich-server
 cd server
-npm ci
-npm run build
-npm prune --omit=dev --omit=optional
+pnpm install --frozen-lockfile --force
+pnpm run build
+pnpm prune --prod --no-optional --config.ci=true
 cd -
 
 cd open-api/typescript-sdk
-npm ci
-npm run build
+pnpm install --frozen-lockfile --force
+pnpm run build
 cd -
 
 cd web
-npm ci
-npm run build
+pnpm install --frozen-lockfile --force
+pnpm run build
 cd -
 
-cp -a server/node_modules server/dist server/bin $APP/
+cp -aL server/node_modules server/dist server/bin $APP/
 cp -a web/build $APP/www
-cp -a server/resources server/package.json server/package-lock.json $APP/
-cp -a server/start*.sh $APP/
+cp -a server/resources server/package.json pnpm-lock.yaml $APP/
 cp -a LICENSE $APP/
 cp -a i18n $APP/../
 cd $APP
-npm cache clean --force
+pnpm store prune
 cd -
 
 # immich-machine-learning
@@ -137,7 +139,7 @@ rm cities500.zip
 
 # Install sharp
 cd $APP
-npm install sharp
+pnpm install sharp
 
 # Setup upload directory
 mkdir -p $IMMICH_PATH/upload
@@ -206,7 +208,8 @@ fi
 rm -rf \
   $TMP \
   $IMMICH_PATH/home/.wget-hsts \
-  $IMMICH_PATH/home/.npm \
+  $IMMICH_PATH/home/.pnpm \
+  $IMMICH_PATH/home/.local/share/pnpm \
   $IMMICH_PATH/home/.cache
 
 echo
