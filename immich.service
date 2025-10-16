@@ -13,7 +13,6 @@ Restart=on-failure
 UMask=0077
 
 WorkingDirectory=/var/lib/immich/app
-EnvironmentFile=/var/lib/immich/env
 ExecStart=/var/lib/immich/app/start.sh
 
 SyslogIdentifier=immich
