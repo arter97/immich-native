@@ -132,6 +132,8 @@ ln -s $IMMICH_PATH/upload $APP/machine-learning/
 cat <<EOF > $APP/start.sh
 #!/bin/bash
 
+export PATH=/usr/lib/jellyfin-ffmpeg:$PATH
+
 set -a
 . $IMMICH_PATH/env
 set +a
@@ -144,6 +146,8 @@ chmod 700 $APP/start.sh
 
 cat <<EOF > $APP/machine-learning/start.sh
 #!/bin/bash
+
+export PATH=/usr/lib/jellyfin-ffmpeg:$PATH
 
 set -a
 . $IMMICH_PATH/env
