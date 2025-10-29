@@ -46,6 +46,11 @@ FFmpeg provided by the distro is typically too old.
 Either install it from [jellyfin](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
 or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it to `/usr/bin`.
 
+Adding [Jellyfin APT repository](https://jellyfin.org/downloads/server) will automatically provide updates.
+Follow the instructions and press Control+C when `jellyfin` package is about to get installed to abort.
+You only need the repository, not the `jellyfin` package itself.
+After that, install `jellyfin-ffmpeg7`.
+
 ### Other APT packages
 
 ``` bash
