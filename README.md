@@ -24,7 +24,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * [PostgreSQL](https://www.postgresql.org/download/linux)
 
- * [Redis](https://redis.io/docs/install/install-redis/install-redis-on-linux)
+ * [Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-linux)
 
 As the time of writing, Node.js v22 LTS, PostgreSQL 18 and Redis 8.2.2 was used.
 
