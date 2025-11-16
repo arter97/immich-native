@@ -117,6 +117,13 @@ python3 -m venv $APP/machine-learning/venv
   # Initiate subshell to setup venv
   . $APP/machine-learning/venv/bin/activate
   pip3 install uv
+  if [ "$(python3 -c 'import sys; print(sys.version_info[:2] > (3, 12))')" = "True" ]; then
+    echo "Python > 3.12, pinning to 3.12"
+    uv venv --python 3.12 --allow-existing $APP/machine-learning/venv
+    # Reload
+    deactivate
+    . $APP/machine-learning/venv/bin/activate
+  fi
   cd machine-learning
   uv sync --no-install-project --no-install-workspace --extra cpu --no-cache --active --link-mode=copy
   cd ..
