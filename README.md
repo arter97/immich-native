@@ -91,7 +91,8 @@ sudo apt install --no-install-recommends \
         libmojolicious-perl \
         libfile-slurper-perl \
         liblcms2-2 \
-        wget
+        wget \
+        libgl1
 ```
 
 A separate Python's virtualenv will be stored to `/var/lib/immich`.
