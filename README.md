@@ -22,6 +22,14 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * [Node.js](https://github.com/nodesource/distributions)
 
+You need corepack enabled to use pnpm.
+
+```bash
+sudo npm install npm@latest -g
+sudo npm install corepack@latest -g
+sudo corepack enable
+```
+
  * [PostgreSQL](https://www.postgresql.org/download/linux)
 
  * [Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-linux)
