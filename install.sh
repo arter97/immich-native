@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v2.2.3
+REV=v2.3.1
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -63,7 +63,9 @@ mkdir -p $APP
 # This expects immich user's home directory to be on $IMMICH_PATH/home
 rm -rf $IMMICH_PATH/home
 mkdir -p $IMMICH_PATH/home
+mkdir -p $IMMICH_PATH/home/.local/bin
 echo 'umask 077' > $IMMICH_PATH/home/.bashrc
+export PATH="$HOME/.local/bin:$PATH"
 
 TMP=/tmp/immich-$(uuidgen)
 if [[ $REV =~ ^[0-9A-Fa-f]+$ ]]; then
@@ -84,6 +86,16 @@ grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$APP\"@g" 
 # Setup pnpm
 corepack use pnpm@latest
 
+# Install extism/js-pdk for extism-js
+curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
+sed -i \
+  -e 's@sudo@@g' \
+  -e "s@/usr/local/binaryen@$HOME/binaryen@g" \
+  -e "s@/usr/local/bin@$HOME/.local/bin@g" \
+    install.sh
+./install.sh
+rm install.sh
+
 # immich-server
 cd server
 pnpm install --frozen-lockfile --force
@@ -101,9 +113,17 @@ pnpm install --frozen-lockfile --force
 pnpm run build
 cd -
 
+cd plugins
+pnpm install --frozen-lockfile --force
+pnpm run build
+cd -
+
 cp -aL server/node_modules server/dist server/bin $APP/
 cp -a web/build $APP/www
 cp -a server/resources server/package.json pnpm-lock.yaml $APP/
+mkdir -p $APP/corePlugin
+cp -a plugins/dist $APP/corePlugin/
+cp -a plugins/manifest.json $APP/corePlugin/
 cp -a LICENSE $APP/
 cp -a i18n $APP/../
 cd $APP
@@ -157,7 +177,7 @@ ln -s $IMMICH_PATH/upload $APP/machine-learning/
 cat <<EOF > $APP/start.sh
 #!/bin/bash
 
-export PATH=/usr/lib/jellyfin-ffmpeg:$PATH
+export PATH=/usr/lib/jellyfin-ffmpeg:$HOME/.local/bin:$PATH
 
 set -a
 . $IMMICH_PATH/env
@@ -172,7 +192,7 @@ chmod 700 $APP/start.sh
 cat <<EOF > $APP/machine-learning/start.sh
 #!/bin/bash
 
-export PATH=/usr/lib/jellyfin-ffmpeg:$PATH
+export PATH=/usr/lib/jellyfin-ffmpeg:$HOME/.local/bin:$PATH
 
 set -a
 . $IMMICH_PATH/env
