@@ -12,6 +12,9 @@ if ! command -v pnpm >/dev/null 2>&1; then
   exit 1
 fi
 
+# Prevent Javascript OOM
+export NODE_OPTIONS="--max-old-space-size=4096"
+
 if [[ "$USER" != "immich" ]]; then
   # Disable systemd services, if installed
   (
