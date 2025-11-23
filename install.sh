@@ -7,6 +7,11 @@ REV=v2.3.1
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
 
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "pnpm is not activated, please follow README's Node.js setup"
+  exit 1
+fi
+
 if [[ "$USER" != "immich" ]]; then
   # Disable systemd services, if installed
   (
