@@ -174,7 +174,21 @@ rm cities500.zip
 
 # Install sharp
 cd $APP
-pnpm install sharp
+# https://github.com/lovell/sharp/blob/main/src/common.h#L20
+VIPS_LOCAL_VERSION="$(pkg-config --modversion vips || true)"
+VIPS_TARGET_VERSION="8.17.3"
+if [[ "$(printf '%s\n' $VIPS_TARGET_VERSION $VIPS_LOCAL_VERSION | sort -V | head -n1)" == "$VIPS_LOCAL_VERSION" ]]; then
+  echo "Local libvips-dev is installed, manually building sharp"
+  pnpm remove sharp
+  SHARP_FORCE_GLOBAL_LIBVIPS=1 npm_config_build_from_source=true pnpm add sharp --ignore-scripts=false --allow-build=sharp
+else
+  if [ ! -z "$VIPS_LOCAL_VERSION" ]; then
+    echo "Local libvips-dev is installed, but it's too out-of-date"
+    echo "Detected $VIPS_LOCAL_VERSION, but $VIPS_TARGET_VERSION or higher is required"
+    sleep 5
+  fi
+  pnpm install sharp
+fi
 
 # Setup upload directory
 mkdir -p $IMMICH_PATH/upload

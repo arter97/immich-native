@@ -16,7 +16,9 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * Only the basic CPU configuration is used. Hardware-acceleration such as CUDA is unsupported. In my personal experience, importing about 10K photos on a x86 processor doesn't take an unreasonable amount of time (less than 30 minutes).
 
- * JPEG XL support may differ official Immich due to base-image's dependency differences.
+ * JPEG XL/RAW support may differ official Immich due to base-image's dependency differences.
+
+ * For HEIF support, see [below](#HEIF-Support).
 
 ## 1. Install dependencies
 
@@ -206,3 +208,21 @@ postgres=# \q
 # Optionally remove dependencies
 # Review /var/log/apt/history.log and remove packages you've installed
 ```
+
+## HEIF Support
+
+ * Apple devices use HEIF images instead of JPG.
+
+ * Immich supports HEIF but installing it natively requires building [Sharp](https://github.com/lovell/sharp) from source.
+
+ * Building Sharp from source in turn requires the latest `libvips-dev` to be installed.
+
+ * For Ubuntu, see my [arter97/libvips PPA](https://launchpad.net/~arter97/+archive/ubuntu/libvips) to install the latest `libvips`:
+
+``` bash
+sudo add-apt-repository ppa:arter97/libvips
+sudo apt install libvips-dev
+sudo apt remove libvips*t64
+```
+
+ * If you installed the latest `libvips-dev`, the install script will detect this automatically and proceed to install Sharp from source.
