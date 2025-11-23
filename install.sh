@@ -225,8 +225,8 @@ cd $APP/machine-learning
 
 set -a
 
-: "\${IMMICH_HOST:=127.0.0.1}"
-: "\${IMMICH_PORT:=3003}"
+: "\${MACHINE_LEARNING_HOST:=127.0.0.1}"
+: "\${MACHINE_LEARNING_PORT:=3003}"
 : "\${MACHINE_LEARNING_WORKERS:=1}"
 : "\${MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S:=2}"
 : "\${MACHINE_LEARNING_WORKER_TIMEOUT:=300}"
@@ -236,7 +236,7 @@ set -a
 exec gunicorn immich_ml.main:app \\
 	-k immich_ml.config.CustomUvicornWorker \\
 	-c immich_ml/gunicorn_conf.py \\
-	-b "\$IMMICH_HOST":"\$IMMICH_PORT" \\
+	-b "\$MACHINE_LEARNING_HOST":"\$MACHINE_LEARNING_PORT" \\
 	-w "\$MACHINE_LEARNING_WORKERS" \\
 	-t "\$MACHINE_LEARNING_WORKER_TIMEOUT" \\
 	--log-config-json log_conf.json \\
