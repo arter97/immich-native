@@ -20,7 +20,7 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
 ## 1. Install dependencies
 
- * [Node.js](https://github.com/nodesource/distributions)
+ * [Node.js](https://nodesource.com/products/distributions)
 
 You need corepack enabled to use pnpm.
 
@@ -34,7 +34,7 @@ sudo corepack enable
 
  * [Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-linux)
 
-As the time of writing, Node.js v22 LTS, PostgreSQL 18 and Redis 8.2.2 was used.
+As the time of writing, Node.js v24 LTS, PostgreSQL 18 and Redis 8.4.0 was used.
 
  * [pgvector](https://github.com/pgvector/pgvector)
 
@@ -57,7 +57,11 @@ or use [FFmpeg Static Builds](https://johnvansickle.com/ffmpeg) and install it t
 Adding [Jellyfin APT repository](https://jellyfin.org/downloads/server) will automatically provide updates.
 Follow the instructions and press Control+C when `jellyfin` package is about to get installed to abort.
 You only need the repository, not the `jellyfin` package itself.
-After that, install `jellyfin-ffmpeg7`.
+After that, install `jellyfin-ffmpeg7`:
+
+``` bash
+sudo apt install jellyfin-ffmpeg7
+```
 
 ### Other APT packages
 
