@@ -221,7 +221,7 @@ postgres=# \q
 
 ``` bash
 sudo add-apt-repository ppa:arter97/libvips
-sudo apt install libvips-dev
+sudo apt install libvips-dev libraw-dev
 sudo apt remove libvips*t64
 ```
 
