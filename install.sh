@@ -128,7 +128,7 @@ cd -
 
 cp -aL server/node_modules server/dist server/bin $APP/
 cp -a web/build $APP/www
-cp -a server/resources server/package.json pnpm-lock.yaml $APP/
+cp -a server/package.json pnpm-lock.yaml $APP/
 mkdir -p $APP/corePlugin
 cp -a plugins/dist $APP/corePlugin/
 cp -a plugins/manifest.json $APP/corePlugin/
