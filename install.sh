@@ -135,8 +135,8 @@ cp -a plugins/dist $APP/corePlugin/
 cp -a plugins/manifest.json $APP/corePlugin/
 cp -a LICENSE $APP/
 cp -a i18n $APP/../
-cd $APP
 pnpm store prune
+cd $APP
 cd -
 
 # immich-machine-learning
