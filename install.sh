@@ -91,8 +91,9 @@ grep -Rl /usr/src | xargs -n1 sed -i -e "s@/usr/src@$IMMICH_PATH@g"
 mkdir -p $IMMICH_PATH/cache
 grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$APP\"@g" -e "s@'/build'@'$APP'@g"
 
-# Setup pnpm
-corepack use pnpm@latest
+# Setup pnpm and use the version specified in package.json packageManager. This avoids incompatibility errors with newer pnpm releases
+corepack enable
+pnpm install 
 
 # Install extism/js-pdk for extism-js
 curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
