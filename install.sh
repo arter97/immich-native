@@ -175,6 +175,25 @@ rm cities500.zip
 
 # Install sharp
 cd $APP
+
+# Copy the packageManager field from the monorepo package.json onto the $APP package.json
+# We are specifically passing the value as an argument to reduce any attack surface
+# Please replace this as soon as you find a suitable solution
+node -e "
+const fs = require('fs');
+const sourcePath = process.argv[1];
+const sourcePkg = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+const destPkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+if (sourcePkg.packageManager) {
+  destPkg.packageManager = sourcePkg.packageManager;
+  fs.writeFileSync('package.json', JSON.stringify(destPkg, null, 2) + '\n');
+  console.log('Successfully injected packageManager:', sourcePkg.packageManager);
+} else {
+  console.error('Error: packageManager field not found in source package.json');
+  process.exit(1);
+}
+" "$TMP/package.json"
 # https://github.com/lovell/sharp/blob/main/src/common.h#L20
 VIPS_LOCAL_VERSION="$(pkg-config --modversion vips || true)"
 VIPS_TARGET_VERSION="8.17.3"
