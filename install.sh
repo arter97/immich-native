@@ -101,6 +101,8 @@ sed -i \
   -e "s@/usr/local/binaryen@$HOME/binaryen@g" \
   -e "s@/usr/local/bin@$HOME/.local/bin@g" \
     install.sh
+# Apply https://github.com/extism/js-pdk/pull/159 until it gets merged
+sed -i -e 's#echo "$response" | grep -m 1 '\''"tag_name":'\''#grep -m 1 '\''"tag_name":'\'' <<< "$response"#' install.sh
 ./install.sh
 rm install.sh
 
