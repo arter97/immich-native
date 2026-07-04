@@ -93,7 +93,7 @@ mkdir -p $IMMICH_PATH/cache
 grep -RlE "\"/build\"|'/build'" | xargs -n1 sed -i -e "s@\"/build\"@\"$APP\"@g" -e "s@'/build'@'$APP'@g"
 
 # Setup pnpm
-corepack use pnpm@latest
+corepack use "$(node -p 'require("./package.json").packageManager')"
 
 # Install extism/js-pdk for extism-js
 curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh
