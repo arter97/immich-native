@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v2.7.5
+REV=v3.0.1
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -76,6 +76,7 @@ echo 'umask 077' > $IMMICH_PATH/home/.bashrc
 export PATH="$HOME/.local/bin:$PATH"
 
 TMP=/tmp/immich-$(uuidgen)
+SERVER_PRUNED=/tmp/immich-server-pruned-$(uuidgen)
 if [[ $REV =~ ^[0-9A-Fa-f]+$ ]]; then
   # REV is a full commit hash, full clone is required
   git clone https://github.com/immich-app/immich $TMP
@@ -106,34 +107,43 @@ sed -i -e 's#echo "$response" | grep -m 1 '\''"tag_name":'\''#grep -m 1 '\''"tag
 ./install.sh
 rm install.sh
 
-# immich-server
-cd server
-pnpm install --frozen-lockfile --force
-pnpm run build
-pnpm prune --prod --no-optional --config.ci=true
-cd -
+# https://github.com/lovell/sharp/blob/main/src/common.h#L20
+VIPS_LOCAL_VERSION="$(pkg-config --modversion vips || true)"
+VIPS_TARGET_VERSION="8.18.3"
+SHARP_USE_GLOBAL_LIBVIPS=false
+if [ -n "$VIPS_LOCAL_VERSION" ] && [[ "$(printf '%s\n' "$VIPS_TARGET_VERSION" "$VIPS_LOCAL_VERSION" | sort -V | tail -n1)" == "$VIPS_LOCAL_VERSION" ]]; then
+  echo "Local libvips-dev is installed, building sharp against it"
+  SHARP_USE_GLOBAL_LIBVIPS=true
+elif [ -n "$VIPS_LOCAL_VERSION" ]; then
+  echo "Local libvips-dev is installed, but it's too out-of-date"
+  echo "Detected $VIPS_LOCAL_VERSION, but $VIPS_TARGET_VERSION or higher is required"
+  sleep 5
+fi
 
-cd open-api/typescript-sdk
-pnpm install --frozen-lockfile --force
-pnpm run build
-cd -
+# immich-server, web, and core plugin
+SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm \
+  --filter @immich/sdk \
+  --filter @immich/plugin-sdk \
+  --filter @immich/plugin-core \
+  --filter immich \
+  --filter immich-web \
+  install --frozen-lockfile --force
 
-cd web
-pnpm install --frozen-lockfile --force
-pnpm run build
-cd -
+pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter immich build
+pnpm --filter @immich/sdk --filter immich-web build
+pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
+if [ "$SHARP_USE_GLOBAL_LIBVIPS" = true ]; then
+  SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --filter immich --prod --no-optional deploy "$SERVER_PRUNED"
+else
+  SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter immich --prod deploy "$SERVER_PRUNED"
+fi
 
-cd plugins
-pnpm install --frozen-lockfile --force
-pnpm run build
-cd -
-
-cp -aL server/node_modules server/dist server/bin $APP/
+cp -a "$SERVER_PRUNED/." $APP/
 cp -a web/build $APP/www
-cp -a server/package.json pnpm-lock.yaml $APP/
-mkdir -p $APP/corePlugin
-cp -a plugins/dist $APP/corePlugin/
-cp -a plugins/manifest.json $APP/corePlugin/
+mkdir -p $APP/plugins/immich-plugin-core
+cp -a packages/plugin-core/dist $APP/plugins/immich-plugin-core/
+cp -a packages/plugin-core/manifest.json $APP/plugins/immich-plugin-core/
+cp -a pnpm-lock.yaml $APP/
 cp -a LICENSE $APP/
 cp -a i18n $APP/../
 cd $APP
@@ -147,15 +157,20 @@ python3 -m venv $APP/machine-learning/venv
   # Initiate subshell to setup venv
   . $APP/machine-learning/venv/bin/activate
   pip3 install uv
-  if [ "$(python3 -c 'import sys; print(sys.version_info[:2] > (3, 12))')" = "True" ]; then
-    echo "Python > 3.12, pinning to 3.12"
-    uv venv --python 3.12 --allow-existing $APP/machine-learning/venv
-    # Reload
-    deactivate
-    . $APP/machine-learning/venv/bin/activate
-  fi
   cd machine-learning
-  uv sync --no-install-project --no-install-workspace --extra cpu --no-cache --active --link-mode=copy
+  # uv will download its own CPython runtime
+  uv sync \
+    --frozen \
+    --extra cpu \
+    --no-dev \
+    --no-editable \
+    --no-install-project \
+    --no-install-workspace \
+    --compile-bytecode \
+    --no-progress \
+    --no-cache \
+    --active \
+    --link-mode=copy
   cd ..
 )
 cp -a \
@@ -173,24 +188,6 @@ wait
 unzip cities500.zip
 date --iso-8601=seconds | tr -d "\n" > geodata-date.txt
 rm cities500.zip
-
-# Install sharp
-cd $APP
-# https://github.com/lovell/sharp/blob/main/src/common.h#L20
-VIPS_LOCAL_VERSION="$(pkg-config --modversion vips || true)"
-VIPS_TARGET_VERSION="8.17.3"
-if [[ "$(printf '%s\n' $VIPS_TARGET_VERSION $VIPS_LOCAL_VERSION | sort -V | tail -n1)" == "$VIPS_LOCAL_VERSION" ]]; then
-  echo "Local libvips-dev is installed, manually building sharp"
-  pnpm remove sharp
-  SHARP_FORCE_GLOBAL_LIBVIPS=1 npm_config_build_from_source=true pnpm add sharp --ignore-scripts=false --allow-build=sharp
-else
-  if [ ! -z "$VIPS_LOCAL_VERSION" ]; then
-    echo "Local libvips-dev is installed, but it's too out-of-date"
-    echo "Detected $VIPS_LOCAL_VERSION, but $VIPS_TARGET_VERSION or higher is required"
-    sleep 5
-  fi
-  pnpm install sharp
-fi
 
 # Setup upload directory
 mkdir -p $IMMICH_PATH/upload
@@ -243,7 +240,8 @@ exec gunicorn immich_ml.main:app \\
 	-t "\$MACHINE_LEARNING_WORKER_TIMEOUT" \\
 	--log-config-json log_conf.json \\
 	--keep-alive "\$MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S" \\
-	--graceful-timeout 10
+	--graceful-timeout 10 \\
+	--no-control-socket
 EOF
 chmod 700 $APP/machine-learning/start.sh
 
@@ -258,6 +256,7 @@ fi
 # Cleanup
 rm -rf \
   $TMP \
+  $SERVER_PRUNED \
   $IMMICH_PATH/home/.wget-hsts \
   $IMMICH_PATH/home/.pnpm \
   $IMMICH_PATH/home/.local/share/pnpm \

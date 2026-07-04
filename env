@@ -1,4 +1,4 @@
-# You can find documentation for all the supported env variables at https://immich.app/docs/install/environment-variables
+# You can find documentation for all the supported env variables at https://docs.immich.app/install/environment-variables
 
 # Connection secret for postgres. You should change it to a random password
 DB_PASSWORD=YOUR_STRONG_RANDOM_PW
