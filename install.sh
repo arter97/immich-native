@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v3.0.3
+REV=v3.1.0
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -180,6 +180,7 @@ mkdir -p $APP/geodata
 cd $APP/geodata
 wget -o - https://download.geonames.org/export/dump/admin1CodesASCII.txt &
 wget -o - https://download.geonames.org/export/dump/admin2Codes.txt &
+wget -o - https://download.geonames.org/export/dump/countryInfo.txt &
 wget -o - https://download.geonames.org/export/dump/cities500.zip &
 wget -o - https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson &
 wait
