@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v3.1.0
+REV=v3.2.0
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -132,6 +132,10 @@ pnpm --filter @immich/sdk --filter immich-web build
 pnpm --filter @immich/sdk --filter @immich/plugin-sdk --filter @immich/plugin-core build
 if [ "$SHARP_USE_GLOBAL_LIBVIPS" = true ]; then
   SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --filter immich --prod --no-optional deploy "$SERVER_PRUNED"
+  SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm \
+    --config.verify-deps-before-run=false \
+    --dir "$SERVER_PRUNED/node_modules/sharp" \
+    exec npm run build
 else
   SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter immich --prod deploy "$SERVER_PRUNED"
 fi
@@ -230,6 +234,7 @@ set -a
 : "\${MACHINE_LEARNING_WORKER_TIMEOUT:=300}"
 : "\${MACHINE_LEARNING_CACHE_FOLDER:=$IMMICH_PATH/cache}"
 : "\${TRANSFORMERS_CACHE:=$IMMICH_PATH/cache}"
+: "\${HF_HOME:=$IMMICH_PATH/cache/hf-cache}"
 
 exec gunicorn immich_ml.main:app \\
 	-k immich_ml.config.CustomUvicornWorker \\
