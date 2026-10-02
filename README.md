@@ -20,6 +20,8 @@ This repository provides instructions and helper scripts to install [Immich](htt
 
  * For HEIF support, see [below](#HEIF-Support).
 
+ * For hardening ImageMagick against malicious uploads, see [below](#ImageMagick-Security-Policy).
+
 ## 1. Install dependencies
 
  * [Node.js](https://nodesource.com/products/distributions)
@@ -226,3 +228,25 @@ sudo apt remove libvips*t64
 ```
 
  * If you installed the latest `libvips-dev`, the install script will detect this automatically and proceed to install Sharp from source.
+
+## ImageMagick Security Policy
+
+ * libvips may fall back to ImageMagick for formats it can't load natively. A crafted upload (e.g., an SVG) can reach ImageMagick's coders and lead to remote code execution. See [GHSA-q89f-h332-8q2h](https://github.com/immich-app/immich/security/advisories/GHSA-q89f-h332-8q2h) .
+
+ * The official fix in Immich v3.2.4 was shipped as an update to the Docker base image, not as a code change. Native installations do not get this fix by upgrading Immich.
+
+ * A native install uses the system's libvips and ImageMagick, so it's controlled by the host's `policy.xml` (e.g., `/etc/ImageMagick-6/policy.xml` or `/etc/ImageMagick-7/policy.xml`).
+
+ * As defense-in-depth, add the following rules inside `<policymap>` of the system `policy.xml`:
+
+``` xml
+  <!-- Immich base image policy -->
+  <policy domain="coder" rights="none" pattern="MSL" />
+  <policy domain="coder" rights="none" pattern="EPHEMERAL" />
+  <policy domain="coder" rights="none" pattern="HTTPS" />
+  <policy domain="coder" rights="none" pattern="HTTP" />
+  <policy domain="coder" rights="none" pattern="FILE" />
+  <policy domain="coder" rights="none" pattern="FTP" />
+  <policy domain="coder" rights="none" pattern="VIDEO" />
+  <policy domain="delegate" rights="none" pattern="*" />
+```
