@@ -107,7 +107,7 @@ rm install.sh
 
 # https://github.com/lovell/sharp/blob/main/src/common.h#L20
 VIPS_LOCAL_VERSION="$(pkg-config --modversion vips || true)"
-VIPS_TARGET_VERSION="8.18.3"
+VIPS_TARGET_VERSION="8.18.7"
 SHARP_USE_GLOBAL_LIBVIPS=false
 if [ -n "$VIPS_LOCAL_VERSION" ] && [[ "$(printf '%s\n' "$VIPS_TARGET_VERSION" "$VIPS_LOCAL_VERSION" | sort -V | tail -n1)" == "$VIPS_LOCAL_VERSION" ]]; then
   echo "Local libvips-dev is installed, building sharp against it"
