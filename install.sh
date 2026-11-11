@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-REV=v3.3.6
+REV=v3.4.0
 
 IMMICH_PATH=/var/lib/immich
 APP=$IMMICH_PATH/app
@@ -235,6 +235,7 @@ set -a
 : "\${MACHINE_LEARNING_CACHE_FOLDER:=$IMMICH_PATH/cache}"
 : "\${TRANSFORMERS_CACHE:=$IMMICH_PATH/cache}"
 : "\${HF_HOME:=$IMMICH_PATH/cache/hf-cache}"
+: "\${MACHINE_LEARNING_MODEL_REVISION:=v2}"
 
 exec gunicorn immich_ml.main:app \\
 	-k immich_ml.config.CustomUvicornWorker \\
@@ -242,7 +243,6 @@ exec gunicorn immich_ml.main:app \\
 	-b "\$MACHINE_LEARNING_HOST":"\$MACHINE_LEARNING_PORT" \\
 	-w "\$MACHINE_LEARNING_WORKERS" \\
 	-t "\$MACHINE_LEARNING_WORKER_TIMEOUT" \\
-	--log-config-json log_conf.json \\
 	--keep-alive "\$MACHINE_LEARNING_HTTP_KEEPALIVE_TIMEOUT_S" \\
 	--graceful-timeout 10 \\
 	--no-control-socket
